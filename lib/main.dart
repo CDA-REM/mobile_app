@@ -1,14 +1,32 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:hotel_arth_app/widgets/app_buttons.dart';
+// import 'package:go_router/go_router.dart';
 
 void main() {
-  runApp(MyApp());
+  runApp(const MyApp());
 }
 
+// GoRouter configuration
+// final _router = GoRouter(
+//   routes: [
+//     GoRoute(
+//       path: '/',
+//       builder: (context, state) => AgentHomePage(),
+//     ),
+//     GoRoute(
+//       path: 'checkin',
+//       builder: (context, state) => Checkin(),
+//     ),
+//   ],
+// );
+
 class MyApp extends StatelessWidget {
-   MyApp({super.key});
-  
-  MaterialColor darkgreen = const MaterialColor(0xFF2D494C, <int, Color>{
+  const MyApp({super.key});
+
+  final MaterialColor darkgreen = const MaterialColor(
+    0xFF2D494C,
+    <int, Color>{
       50: Color(0xFF2D494C),
       100: Color(0xFF2D494C),
       200: Color(0xFF2D494C),
@@ -21,7 +39,9 @@ class MyApp extends StatelessWidget {
       900: Color(0xFF2D494C),
     },
   );
-  MaterialColor lightgreen = const MaterialColor(0xFFECF2F0, <int, Color>{
+  final MaterialColor lightgreen = const MaterialColor(
+    0xFFECF2F0,
+    <int, Color>{
       50: Color(0xFFECF2F0),
       100: Color(0xFFECF2F0),
       200: Color(0xFFECF2F0),
@@ -38,32 +58,22 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
+      title: 'Hôtel Arth',
       theme: ThemeData(
-        
         primarySwatch: darkgreen,
-        textTheme:  TextTheme(
+        textTheme: TextTheme(
           bodyLarge: GoogleFonts.getFont('Roboto'),
           headlineLarge: TextStyle(fontSize: 35, fontWeight: FontWeight.w900),
           headlineMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
         ),
       ),
-      home: const HomePage(title: 'Flutter Demo Home Page'),
+      home: const HomePage(title: 'Reception clients'),
     );
   }
 }
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key, required this.title});
-
-  // This widget is the home page of your application. It is stateful, meaning
-  // that it has a State object (defined below) that contains fields that affect
-  // how it looks.
-
-  // This class is the configuration for the state. It holds the values (in this
-  // case the title) provided by the parent (in this case the App widget) and
-  // used by the build method of the State. Fields in a Widget subclass are
-  // always marked "final".
 
   final String title;
 
@@ -72,73 +82,54 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  
-
-  
-
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-      
       body: Center(
-        
         child: Column(
-          // Column is also a layout widget. It takes a list of children and
-          // arranges them vertically. By default, it sizes itself to fit its
-          // children horizontally, and tries to be as tall as its parent.
-          //
-          // Invoke "debug painting" (press "p" in the console, choose the
-          // "Toggle Debug Paint" action from the Flutter Inspector in Android
-          // Studio, or the "Toggle Debug Paint" command in Visual Studio Code)
-          // to see the wireframe for each widget.
-          //
-          // Column has various properties to control how it sizes itself and
-          // how it positions its children. Here we use mainAxisAlignment to
-          // center the children vertically; the main axis here is the vertical
-          // axis because Columns are vertical (the cross axis would be
-          // horizontal).
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            ListView(
-              scrollDirection: Axis.vertical,
+            Column(
               children: [
                 Image(image: AssetImage('assets/images/Logo.png')),
                 Padding(
-                  padding: const EdgeInsets.fromLTRB(0, 35, 0, 17),
-                  child:  _button("CHECK-IN", Color.fromARGB(255, 45, 73, 76)),
+                  padding: EdgeInsets.fromLTRB(0, 30, 0, 17),
+                  child: AppButton(
+                    backgroundColor: Color.fromARGB(255, 45, 73, 76),
+                    textColor: Colors.white,
+                    text: "CHECK-IN",
+                    minSize: 185,
+                  ),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 17, 0, 17),
-                  child:  _button("ECRITURE D'UNE CLE", Color.fromARGB(255, 45, 73, 76)),
+                  child: AppButton(
+                      backgroundColor: Color.fromARGB(255, 45, 73, 76),
+                      textColor: Colors.white,
+                      text: "ECRITURE D'UNE CLE",
+                      minSize: 185),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 17, 0, 17),
-                  child:  _button("LECTURE D'UNE CLE", Color.fromARGB(255, 45, 73, 76)),
+                  child: AppButton(
+                      backgroundColor: Color.fromARGB(255, 45, 73, 76),
+                      textColor: Colors.white,
+                      text: "LECTURE D'UNE CLE",
+                      minSize: 185),
                 ),
                 Padding(
                   padding: const EdgeInsets.fromLTRB(0, 17, 0, 17),
-                  child:  _button("SIMULATION", Color.fromARGB(255, 45, 73, 76)),
+                  child: AppButton(
+                      backgroundColor: Color.fromARGB(255, 45, 73, 76),
+                      textColor: Colors.white,
+                      text: "SIMULATION",
+                      minSize: 185),
                 ),
-                
-                
               ],
             )
           ],
         ),
       ),
-     
-    );
-  }
-   _button(String text, Color color) {
-    return MaterialButton(
-      onPressed: () => print("hello"),
-      minWidth: 185,
-      shape: const ContinuousRectangleBorder(
-      borderRadius: BorderRadius.all(Radius.circular(4))),
-      textColor: Colors.white,
-      color: color,
-      child: Text(text)
     );
   }
 }
