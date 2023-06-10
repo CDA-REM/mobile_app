@@ -53,7 +53,8 @@ dev_dependencies:
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
   flutter_native_splash: ^2.3.1
-
+  flutter_launcher_icons: ^0.13.1
+  
 flutter_native_splash:
  color: "#2d494c" # change la couleur du background
  image: assets/images/splash.png
@@ -61,7 +62,12 @@ flutter_native_splash:
  android_12:
   color: "#2d494c" # change la couleur du background
   image: assets/images/splash.png
- 
+
+# Change icon app
+flutter_launcher_icons: 
+  android: "launcher_icon" 
+  ios: true 
+  image_path: "assets/images/icon_app.png" 
 # The following section is specific to Flutter packages.
 flutter:
 
