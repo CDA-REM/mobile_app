@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hotel_arth_app/reception/checkin.dart';
-
 import '../widgets/app_buttons.dart';
 
 class HomePage extends StatelessWidget {

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:hotel_arth_app/reception/agent_home_page.dart';
-import 'package:hotel_arth_app/reception/checkin.dart';
-import 'package:hotel_arth_app/widgets/app_buttons.dart';
 
 void main() {
   runApp(const MyApp());
