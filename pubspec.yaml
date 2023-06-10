@@ -54,6 +54,7 @@ dev_dependencies:
 # following page: https://dart.dev/tools/pub/pubspec
   flutter_native_splash: ^2.3.1
   flutter_launcher_icons: ^0.13.1
+  rename_app_plus: ^1.2.1
   
 flutter_native_splash:
  color: "#2d494c" # change la couleur du background

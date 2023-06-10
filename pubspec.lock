@@ -376,6 +376,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.1"
+  rename_app_plus:
+    dependency: "direct dev"
+    description:
+      name: rename_app_plus
+      sha256: a53d49ae55375eb1bfd5c41aa3a1c177cea0663eebc004b6b396c3993df3ddee
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.2.1"
   sky_engine:
     dependency: transitive
     description: flutter
