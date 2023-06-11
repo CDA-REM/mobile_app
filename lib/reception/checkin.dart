@@ -2,7 +2,9 @@ import 'dart:developer';
 import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:hotel_arth_app/reception/reservation_infos.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
+import '../Services/qr_code.dart';
 
 class Checkin extends StatefulWidget {
   const Checkin({super.key});
@@ -12,9 +14,11 @@ class Checkin extends StatefulWidget {
 }
 
 class _CheckinState extends State<Checkin> {
-  Barcode? result;
-  QRViewController? controller;
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  var qrcode = QrCode();
+
+  // Barcode? result;
+  // QRViewController? controller;
+  // final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
 
   // In order to get hot reload to work we need to pause the camera if the platform
   // is android, or resume the camera if the platform is iOS.
@@ -22,9 +26,9 @@ class _CheckinState extends State<Checkin> {
   void reassemble() {
     super.reassemble();
     if (Platform.isAndroid) {
-      controller!.pauseCamera();
+      qrcode.controller!.pauseCamera();
     }
-    controller!.resumeCamera();
+    qrcode.controller!.resumeCamera();
   }
 
   @override
@@ -40,11 +44,12 @@ class _CheckinState extends State<Checkin> {
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: <Widget>[
-                  if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  else
-                    const Text('Scan a code'),
+                  if (qrcode.result != null)
+                    if (describeEnum(qrcode.result!.format) == "qrcode")
+                      Text(
+                          'Barcode Type: ${describeEnum(qrcode.result!.format)}   Data: ${qrcode.id = qrcode.result!.code}')
+                    else
+                      const Text('Scannez le QR code'),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -53,13 +58,17 @@ class _CheckinState extends State<Checkin> {
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                             onPressed: () async {
-                              await controller?.toggleFlash();
+                              await qrcode.controller?.toggleFlash();
                               setState(() {});
                             },
                             child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
+                              future: qrcode.controller?.getFlashStatus(),
                               builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
+                                if (snapshot.data == false)
+                                  return Icon(Icons.flash_off_sharp);
+                                else
+                                  return Icon(Icons.flash_on_sharp);
+                                // Text('Flash: ${snapshot.data}');
                               },
                             )),
                       ),
@@ -67,17 +76,25 @@ class _CheckinState extends State<Checkin> {
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                             onPressed: () async {
-                              await controller?.flipCamera();
+                              await qrcode.controller?.flipCamera();
                               setState(() {});
                             },
                             child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
+                              future: qrcode.controller?.getCameraInfo(),
                               builder: (context, snapshot) {
                                 if (snapshot.data != null) {
-                                  return Text(
-                                      'Camera facing ${describeEnum(snapshot.data!)}');
+                                  if (describeEnum(snapshot.data!) == "back") {
+                                    return Icon(
+                                        Icons.photo_camera_back_outlined);
+                                  } else if (describeEnum(snapshot.data!) ==
+                                      "front") {
+                                    return Icon(
+                                        Icons.photo_camera_front_outlined);
+                                  } else {
+                                    return const Text('Chargement');
+                                  }
                                 } else {
-                                  return const Text('loading');
+                                  return const Text('Chargement');
                                 }
                               },
                             )),
@@ -92,7 +109,14 @@ class _CheckinState extends State<Checkin> {
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                           onPressed: () async {
-                            await controller?.pauseCamera();
+                            await qrcode.controller?.pauseCamera();
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ReservationInfos(),
+                                  settings: RouteSettings(
+                                      arguments: {'id': qrcode.result!.code})),
+                            );
                           },
                           child: const Text('pause',
                               style: TextStyle(fontSize: 20)),
@@ -102,7 +126,7 @@ class _CheckinState extends State<Checkin> {
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
                           onPressed: () async {
-                            await controller?.resumeCamera();
+                            await qrcode.controller?.resumeCamera();
                           },
                           child: const Text('resume',
                               style: TextStyle(fontSize: 20)),
@@ -128,7 +152,7 @@ class _CheckinState extends State<Checkin> {
     // To ensure the Scanner view is properly sizes after rotation
     // we need to listen for Flutter SizeChanged notification and update controller
     return QRView(
-      key: qrKey,
+      key: qrcode.qrKey,
       onQRViewCreated: _onQRViewCreated,
       overlay: QrScannerOverlayShape(
           borderColor: Colors.red,
@@ -142,11 +166,11 @@ class _CheckinState extends State<Checkin> {
 
   void _onQRViewCreated(QRViewController controller) {
     setState(() {
-      this.controller = controller;
+      qrcode.controller = controller;
     });
     controller.scannedDataStream.listen((scanData) {
       setState(() {
-        result = scanData;
+        qrcode.result = scanData;
       });
     });
   }
@@ -162,7 +186,7 @@ class _CheckinState extends State<Checkin> {
 
   @override
   void dispose() {
-    controller?.dispose();
+    qrcode.controller?.dispose();
     super.dispose();
   }
 }
