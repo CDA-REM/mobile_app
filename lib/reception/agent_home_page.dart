@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
-import 'package:hotel_arth_app/reception/checkin.dart';
+import 'package:hotel_arth_app/reception/qrcode_scan.dart';
 
 import '../widgets/app_buttons.dart';
 
@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
                     onPressed: () {
             Navigator.push(
               context,
-              MaterialPageRoute(builder: (context) => const Checkin()),
+              MaterialPageRoute(builder: (context) => const QrcodeScan()),
             );
           },
                                     ),
