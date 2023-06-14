@@ -2,14 +2,14 @@ import 'dart:convert';
 
 import 'package:http/http.dart' as http;
 
-import '../reservations.dart';
+import '../reservation.dart';
 
 class ReservationsApi {
 
   Future<List<Reservation>> getReservations() async {
     var response = await http
-    .get(Uri.parse('https://localhost:8000/api/reservations'));
+    .get(Uri.parse('http://192.168.1.59:8000/api/reservations'));
 
-    return Reservations.fromJson(jsonDecode(response.body)).data;
+    return reservationFromJson(response.body);
   }
 }
