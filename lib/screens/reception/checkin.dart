@@ -1,168 +1,142 @@
-import 'dart:developer';
-import 'dart:io';
-import 'package:flutter/foundation.dart';
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:qr_code_scanner/qr_code_scanner.dart';
+import 'package:http/http.dart' as http;
+import '../models/reservations.dart';
+import '../url.dart';
 
 class Checkin extends StatefulWidget {
-  const Checkin({super.key});
+  const Checkin({super.key, required this.reservationId});
+  final String reservationId;
 
   @override
   State<Checkin> createState() => _CheckinState();
 }
 
 class _CheckinState extends State<Checkin> {
-  Barcode? result;
-  QRViewController? controller;
-  final GlobalKey qrKey = GlobalKey(debugLabel: 'QR');
+  late Future<Reservation> reservation;
 
-  // In order to get hot reload to work we need to pause the camera if the platform
-  // is android, or resume the camera if the platform is iOS.
-  @override
-  void reassemble() {
-    super.reassemble();
-    if (Platform.isAndroid) {
-      controller!.pauseCamera();
+  Future<Reservation> getReservationsById() async {
+    var url = AppURL.url;
+    var id = (widget.reservationId);
+    var urlToCall = Uri.parse('${url}api/reservations/$id');
+    var response = await http.get(urlToCall);
+
+    if (response.statusCode == 200) {
+      var json = jsonDecode(response.body);
+      return Reservation.fromJson(json["data"]);
+    } else {
+      throw Exception('Erreur au chargement de la réservation');
     }
-    controller!.resumeCamera();
+  }
+
+  @override
+  void initState() {
+    reservation = getReservationsById();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Column(
-        children: <Widget>[
-          Expanded(flex: 4, child: _buildQrView(context)),
-          Expanded(
-            flex: 1,
-            child: FittedBox(
-              fit: BoxFit.contain,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: <Widget>[
-                  if (result != null)
-                    Text(
-                        'Barcode Type: ${describeEnum(result!.format)}   Data: ${result!.code}')
-                  else
-                    const Text('Scan a code'),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.toggleFlash();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getFlashStatus(),
-                              builder: (context, snapshot) {
-                                return Text('Flash: ${snapshot.data}');
-                              },
-                            )),
+        appBar: AppBar(
+          leading: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+          title: const Text('Scanner QR code'),
+        ),
+        body: FutureBuilder(
+            future: reservation,
+            builder: (context, AsyncSnapshot snapshot) {
+              if (snapshot.hasData) {
+                print(snapshot.data!);
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Center(
+
+                          child: const Text("Informations de la réservation")),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
+                      child: Column(
+                        children: [
+                          Text('Numéro de réservation: ${widget.reservationId}'),
+                          Padding(
+                            padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
+                            child: Text("data"),
+                          )
+                          Container(
+                              width: 200,
+                              child: Table(
+                                  defaultColumnWidth: FixedColumnWidth(100),
+                                  border: TableBorder.all(
+                                      color: Colors.black,
+                                      style: BorderStyle.solid,
+                                      width: 1),
+                                  children: [
+                                    TableRow(children: [
+                                      Column(children: [
+                                        Text('Numéro de réservation: ${widget.reservationId}',
+                                            style: TextStyle(fontSize: 16.0))
+                                      ]),
+                                      Column(children: [
+                                        Text(widget.reservationId,
+                                            style: TextStyle(fontSize: 16.0))
+                                      ]),
+                                    ]),
+                                    TableRow(children: [
+                                      Column(children: [
+                                        Text('Nombre de chambre',
+                                            style: TextStyle(fontSize: 16.0))
+                                      ]),
+                                      Column(children: [
+                                        Text(
+                                            (snapshot.data!.rooms.length)
+                                                .toString(),
+                                            style: TextStyle(fontSize: 16.0))
+                                      ]),
+                                    ]),
+                                    TableRow(children: [
+                                      Column(children: [
+                                        Text('Check-in',
+                                            style: TextStyle(fontSize: 16.0))
+                                      ]),
+                                      Column(children: [
+                                        Text(snapshot.data!.checkin,
+                                            style: TextStyle(fontSize: 16.0))
+                                      ]),
+                                    ]),
+                                    TableRow(children: [
+                                      Column(children: [
+                                        Text('Check-out',
+                                            style: TextStyle(fontSize: 16.0))
+                                      ]),
+                                      Column(children: [
+                                        Text((snapshot.data!.checkout).toString(),
+                                            style: TextStyle(fontSize: 16.0))
+                                      ]),
+                                    ]),
+                                    TableRow(children: [
+                                      Column(children: [
+                                        Text('Montant',
+                                            style: TextStyle(fontSize: 16.0))
+                                      ]),
+                                      Column(children: [
+                                        Text((snapshot.data!.price).toString(),
+                                            style: TextStyle(fontSize: 16.0))
+                                      ]),
+                                    ]),
+                                  ])),
+                        ],
                       ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                            onPressed: () async {
-                              await controller?.flipCamera();
-                              setState(() {});
-                            },
-                            child: FutureBuilder(
-                              future: controller?.getCameraInfo(),
-                              builder: (context, snapshot) {
-                                if (snapshot.data != null) {
-                                  return Text(
-                                      'Camera facing ${describeEnum(snapshot.data!)}');
-                                } else {
-                                  return const Text('loading');
-                                }
-                              },
-                            )),
-                      )
-                    ],
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: <Widget>[
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.pauseCamera();
-                          },
-                          child: const Text('pause',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      ),
-                      Container(
-                        margin: const EdgeInsets.all(8),
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
-                          child: const Text('resume',
-                              style: TextStyle(fontSize: 20)),
-                        ),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }
-
-  Widget _buildQrView(BuildContext context) {
-    // For this example we check how width or tall the device is and change the scanArea and overlay accordingly.
-    var scanArea = (MediaQuery.of(context).size.width < 400 ||
-            MediaQuery.of(context).size.height < 400)
-        ? 150.0
-        : 300.0;
-    // To ensure the Scanner view is properly sizes after rotation
-    // we need to listen for Flutter SizeChanged notification and update controller
-    return QRView(
-      key: qrKey,
-      onQRViewCreated: _onQRViewCreated,
-      overlay: QrScannerOverlayShape(
-          borderColor: Colors.red,
-          borderRadius: 10,
-          borderLength: 30,
-          borderWidth: 10,
-          cutOutSize: scanArea),
-      onPermissionSet: (ctrl, p) => _onPermissionSet(context, ctrl, p),
-    );
-  }
-
-  void _onQRViewCreated(QRViewController controller) {
-    setState(() {
-      this.controller = controller;
-    });
-    controller.scannedDataStream.listen((scanData) {
-      setState(() {
-        result = scanData;
-      });
-    });
-  }
-
-  void _onPermissionSet(BuildContext context, QRViewController ctrl, bool p) {
-    log('${DateTime.now().toIso8601String()}_onPermissionSet $p');
-    if (!p) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('no Permission')),
-      );
-    }
-  }
-
-  @override
-  void dispose() {
-    controller?.dispose();
-    super.dispose();
+                    ),
+                  ],
+                );
+              } else {
+                return Text(widget.reservationId);
+              }
+            }));
   }
 }
