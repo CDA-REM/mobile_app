@@ -14,6 +14,10 @@ String reservationToJson(List<Reservation> data) => json.encode(List<dynamic>.fr
 class Reservation {
     int id;
     int userId;
+    Gender userGender;
+    String userName;
+    String startedDate;
+    String endDate;
     int numberOfPeople;
     dynamic checkin;
     dynamic checkout;
@@ -27,10 +31,13 @@ class Reservation {
     Reservation({
         required this.id,
         required this.userId,
+        required this.userGender,
+        required this.userName,
+        required this.startedDate,
+        required this.endDate,
         required this.numberOfPeople,
         required this.checkin,
         required this.checkout,
-        this.hasOptions,
         required this.price,
         required this.stayType,
         required this.status,
@@ -41,10 +48,13 @@ class Reservation {
     factory Reservation.fromJson(Map<String, dynamic> json) => Reservation(
         id: json["id"],
         userId: json["user_id"],
+        userGender: json["user_gender"],
+        userName: json["user_name"],
+        startedDate: json["started-date"],
+        endDate: json["end_date"],
         numberOfPeople: json["number_of_people"],
         checkin: json["checkin"],
         checkout: json["checkout"],
-        hasOptions: json["has_options"],
         price: json["price"]?.toDouble(),
         stayType: stayTypeValues.map[json["stay_type"]]!,
         status: statusValues.map[json["status"]]!,
@@ -55,10 +65,11 @@ class Reservation {
     Map<String, dynamic> toJson() => {
         "id": id,
         "user_id": userId,
+        "started_date": startedDate,
+        "end_date": endDate,
         "number_of_people": numberOfPeople,
         "checkin": checkin,
         "checkout": checkout,
-        "has_options": hasOptions,
         "price": price,
         "stay_type": stayTypeValues.reverse[stayType],
         "status": statusValues.reverse[status],
@@ -67,20 +78,20 @@ class Reservation {
     };
 }
 
-enum Status { VALIDATED, NO_SHOW, TERMINATED, CANCELLED }
+enum Status { validated, noShow, terminated, cancelled }
 
 final statusValues = EnumValues({
-    "cancelled": Status.CANCELLED,
-    "no-show": Status.NO_SHOW,
-    "terminated": Status.TERMINATED,
-    "validated": Status.VALIDATED
+    "cancelled": Status.cancelled,
+    "no-show": Status.noShow,
+    "terminated": Status.terminated,
+    "validated": Status.validated
 });
 
-enum StayType { PRO, PERSONAL }
+enum StayType { pro, personal }
 
 final stayTypeValues = EnumValues({
-    "personal": StayType.PERSONAL,
-    "pro": StayType.PRO
+    "personal": StayType.personal,
+    "pro": StayType.pro
 });
 
 class EnumValues<T> {
@@ -94,3 +105,12 @@ class EnumValues<T> {
         return reverseMap;
     }
 }
+
+enum Gender { mme, mr}
+
+final genderValues = EnumValues({
+    "madam": Gender.mme,
+    "madame": Gender.mme,
+    "mister": Gender.mr,
+    "monsieur": Gender.mr
+});
