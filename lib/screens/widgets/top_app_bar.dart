@@ -16,13 +16,6 @@ class ArthTopAppBar extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       leading : Icon(Icons.arrow_back),
       title: Text(title),
-      actions:[
-        IconButton(
-          icon: ImageIcon(
-            AssetImage('assets/images/logo_white.png')),
-        onPressed: () {},
-        )
-      ]
     );
   }
 }
