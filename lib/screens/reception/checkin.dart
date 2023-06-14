@@ -1,8 +1,9 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import '../models/reservations.dart';
-import '../url.dart';
+
+import '../../models/reservations.dart';
+import '../../url.dart';
 
 class Checkin extends StatefulWidget {
   const Checkin({super.key, required this.reservationId});
@@ -55,80 +56,25 @@ class _CheckinState extends State<Checkin> {
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Center(
-
                           child: const Text("Informations de la réservation")),
                     ),
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10, 20, 10, 20),
                       child: Column(
                         children: [
-                          Text('Numéro de réservation: ${widget.reservationId}'),
+                          Text(
+                              'Numéro de réservation: ${widget.reservationId}'),
                           Padding(
                             padding: const EdgeInsets.fromLTRB(0, 20, 0, 20),
-                            child: Text("data"),
-                          )
-                          Container(
-                              width: 200,
-                              child: Table(
-                                  defaultColumnWidth: FixedColumnWidth(100),
-                                  border: TableBorder.all(
-                                      color: Colors.black,
-                                      style: BorderStyle.solid,
-                                      width: 1),
-                                  children: [
-                                    TableRow(children: [
-                                      Column(children: [
-                                        Text('Numéro de réservation: ${widget.reservationId}',
-                                            style: TextStyle(fontSize: 16.0))
-                                      ]),
-                                      Column(children: [
-                                        Text(widget.reservationId,
-                                            style: TextStyle(fontSize: 16.0))
-                                      ]),
-                                    ]),
-                                    TableRow(children: [
-                                      Column(children: [
-                                        Text('Nombre de chambre',
-                                            style: TextStyle(fontSize: 16.0))
-                                      ]),
-                                      Column(children: [
-                                        Text(
-                                            (snapshot.data!.rooms.length)
-                                                .toString(),
-                                            style: TextStyle(fontSize: 16.0))
-                                      ]),
-                                    ]),
-                                    TableRow(children: [
-                                      Column(children: [
-                                        Text('Check-in',
-                                            style: TextStyle(fontSize: 16.0))
-                                      ]),
-                                      Column(children: [
-                                        Text(snapshot.data!.checkin,
-                                            style: TextStyle(fontSize: 16.0))
-                                      ]),
-                                    ]),
-                                    TableRow(children: [
-                                      Column(children: [
-                                        Text('Check-out',
-                                            style: TextStyle(fontSize: 16.0))
-                                      ]),
-                                      Column(children: [
-                                        Text((snapshot.data!.checkout).toString(),
-                                            style: TextStyle(fontSize: 16.0))
-                                      ]),
-                                    ]),
-                                    TableRow(children: [
-                                      Column(children: [
-                                        Text('Montant',
-                                            style: TextStyle(fontSize: 16.0))
-                                      ]),
-                                      Column(children: [
-                                        Text((snapshot.data!.price).toString(),
-                                            style: TextStyle(fontSize: 16.0))
-                                      ]),
-                                    ]),
-                                  ])),
+                            child: Text(
+                                'Nombre de chambre : ${snapshot.data!.rooms.length}'),
+                          ),
+                          Text('Madame Lucile Cost'),
+                          Text(
+                              'Nombre de personnes : ${snapshot.data!.numberOfPeople}'),
+                          Text('Date d\'arrivée : ${snapshot.data!.checkin}'),
+                          Text('Date de départ : ${snapshot.data!.checkout}'),
+                          Text('Montant : ${snapshot.data!.price}'),
                         ],
                       ),
                     ),
