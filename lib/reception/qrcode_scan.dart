@@ -114,9 +114,15 @@ class _QrcodeScanState extends State<QrcodeScan> {
                       Container(
                         margin: const EdgeInsets.all(8),
                         child: ElevatedButton(
-                          onPressed: () async {
-                            await controller?.resumeCamera();
-                          },
+                          onPressed: () => Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      Checkin(reservationId: '47'))),
+
+                          // () async {
+                          //   await controller?.resumeCamera();
+                          // },
                           child: const Text('resume',
                               style: TextStyle(fontSize: 20)),
                         ),
@@ -165,8 +171,7 @@ class _QrcodeScanState extends State<QrcodeScan> {
           Navigator.push(
               context,
               MaterialPageRoute(
-                  builder: (context) =>
-                      Checkin(reservationId: result!.code! )));
+                  builder: (context) => Checkin(reservationId: result!.code!)));
         }
       }
     });

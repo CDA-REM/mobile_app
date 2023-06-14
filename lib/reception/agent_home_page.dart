@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:go_router/go_router.dart';
 import 'package:hotel_arth_app/reception/qrcode_scan.dart';
-
 import '../widgets/app_buttons.dart';
 
 class HomePage extends StatelessWidget {
@@ -19,7 +17,7 @@ class HomePage extends StatelessWidget {
           children: <Widget>[
             Column(
               children: [
-                Image(image: AssetImage('assets/images/Logo.png')),               
+                const Image(image: AssetImage('assets/images/Logo.png')),               
                 Padding(
                   padding: EdgeInsets.fromLTRB(0, 100, 0, 17),
                   child: AppButton(
