@@ -14,6 +14,4 @@ class ReservationsApi {
 
     return Reservations.fromJson(jsonDecode(response.body)).data;
   }
-
-  
 }
