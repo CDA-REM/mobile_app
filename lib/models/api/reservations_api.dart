@@ -1,15 +1,17 @@
 import 'dart:convert';
 
+import 'package:hotel_arth_app/url.dart';
 import 'package:http/http.dart' as http;
 
-import '../reservation.dart';
+import '../reservations.dart';
 
 class ReservationsApi {
-
+  var url = AppURL();
+   
   Future<List<Reservation>> getReservations() async {
     var response = await http
-    .get(Uri.parse('http://192.168.1.59:8000/api/reservations'));
+    .get(Uri.parse('$url/api/reservations'));
 
-    return reservationFromJson(response.body);
+    return Reservations.fromJson(jsonDecode(response.body)).data;
   }
 }
