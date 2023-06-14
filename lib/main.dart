@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:hotel_arth_app/reception/agent_home_page.dart';
+import 'package:hotel_arth_app/screens/reception/agent_home_page.dart';
+import 'package:hotel_arth_app/screens/reception/checkin.dart';
+import 'package:hotel_arth_app/screens/widgets/app_buttons.dart';
 
 void main() {
   runApp(const MyApp());
@@ -43,6 +45,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       title: 'Hôtel Arth',
       theme: ThemeData(
         primarySwatch: darkgreen,
@@ -52,7 +55,7 @@ class MyApp extends StatelessWidget {
           headlineMedium: TextStyle(fontSize: 20, fontWeight: FontWeight.w900),
         ),
       ),
-      home: HomePage(),
+      home: HomePage()
     );
   }
 }
