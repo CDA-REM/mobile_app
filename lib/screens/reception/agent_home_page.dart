@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:hotel_arth_app/reception/qrcode_scan.dart';
+import 'package:hotel_arth_app/screens/qrcode_scan.dart';
 import '../widgets/home_page_button.dart';
 import '../write_key/rooms_with_chekins.dart';
 

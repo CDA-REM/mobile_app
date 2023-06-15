@@ -1,23 +1,17 @@
 // To parse this JSON data, do
 //
-//     final reservation = reservationFromJson(jsonString);
+//     final reservations = reservationsFromJson(jsonString);
 
 import 'dart:convert';
-
-import 'package:hotel_arth_app/models/option.dart';
-import 'package:hotel_arth_app/models/room.dart';
 
 List<Reservation> reservationFromJson(String str) => List<Reservation>.from(json.decode(str).map((x) => Reservation.fromJson(x)));
 
 String reservationToJson(List<Reservation> data) => json.encode(List<dynamic>.from(data.map((x) => x.toJson())));
 
+
 class Reservation {
     int id;
     int userId;
-    Gender userGender;
-    String userName;
-    String startedDate;
-    String endDate;
     int numberOfPeople;
     dynamic checkin;
     dynamic checkout;
@@ -31,13 +25,10 @@ class Reservation {
     Reservation({
         required this.id,
         required this.userId,
-        required this.userGender,
-        required this.userName,
-        required this.startedDate,
-        required this.endDate,
         required this.numberOfPeople,
         required this.checkin,
         required this.checkout,
+        this.hasOptions,
         required this.price,
         required this.stayType,
         required this.status,
@@ -48,13 +39,10 @@ class Reservation {
     factory Reservation.fromJson(Map<String, dynamic> json) => Reservation(
         id: json["id"],
         userId: json["user_id"],
-        userGender: json["user_gender"],
-        userName: json["user_name"],
-        startedDate: json["started-date"],
-        endDate: json["end_date"],
         numberOfPeople: json["number_of_people"],
         checkin: json["checkin"],
         checkout: json["checkout"],
+        hasOptions: json["has_options"],
         price: json["price"]?.toDouble(),
         stayType: stayTypeValues.map[json["stay_type"]]!,
         status: statusValues.map[json["status"]]!,
@@ -65,11 +53,10 @@ class Reservation {
     Map<String, dynamic> toJson() => {
         "id": id,
         "user_id": userId,
-        "started_date": startedDate,
-        "end_date": endDate,
         "number_of_people": numberOfPeople,
         "checkin": checkin,
         "checkout": checkout,
+        "has_options": hasOptions,
         "price": price,
         "stay_type": stayTypeValues.reverse[stayType],
         "status": statusValues.reverse[status],
@@ -78,20 +65,148 @@ class Reservation {
     };
 }
 
-enum Status { validated, noShow, terminated, cancelled }
+class Option {
+    int id;
+    OptionName optionName;
+    int optionPrice;
+    OptionPivot pivot;
 
-final statusValues = EnumValues({
-    "cancelled": Status.cancelled,
-    "no-show": Status.noShow,
-    "terminated": Status.terminated,
-    "validated": Status.validated
+    Option({
+        required this.id,
+        required this.optionName,
+        required this.optionPrice,
+        required this.pivot,
+    });
+
+    factory Option.fromJson(Map<String, dynamic> json) => Option(
+        id: json["id"],
+        optionName: OptionName.fromJson(json["option_name"]),
+        optionPrice: json["option_price"],
+        pivot: OptionPivot.fromJson(json["pivot"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "option_name": optionName.toJson(),
+        "option_price": optionPrice,
+        "pivot": pivot.toJson(),
+    };
+}
+
+class OptionName {
+    String fr;
+    String en;
+
+    OptionName({
+        required this.fr,
+        required this.en,
+    });
+
+    factory OptionName.fromJson(Map<String, dynamic> json) => OptionName(
+        fr: json["fr"],
+        en: json["en"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "fr": fr,
+        "en": en,
+    };
+}
+
+class OptionPivot {
+    int reservationId;
+    int optionId;
+
+    OptionPivot({
+        required this.reservationId,
+        required this.optionId,
+    });
+
+    factory OptionPivot.fromJson(Map<String, dynamic> json) => OptionPivot(
+        reservationId: json["reservation_id"],
+        optionId: json["option_id"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "reservation_id": reservationId,
+        "option_id": optionId,
+    };
+}
+
+class Room {
+    int id;
+    int roomNumber;
+    Style style;
+    int price;
+    RoomPivot pivot;
+
+    Room({
+        required this.id,
+        required this.roomNumber,
+        required this.style,
+        required this.price,
+        required this.pivot,
+    });
+
+    factory Room.fromJson(Map<String, dynamic> json) => Room(
+        id: json["id"],
+        roomNumber: json["room_number"],
+        style: styleValues.map[json["style"]]!,
+        price: json["price"],
+        pivot: RoomPivot.fromJson(json["pivot"]),
+    );
+
+    Map<String, dynamic> toJson() => {
+        "id": id,
+        "room_number": roomNumber,
+        "style": styleValues.reverse[style],
+        "price": price,
+        "pivot": pivot.toJson(),
+    };
+}
+
+class RoomPivot {
+    int reservationId;
+    int roomId;
+
+    RoomPivot({
+        required this.reservationId,
+        required this.roomId,
+    });
+
+    factory RoomPivot.fromJson(Map<String, dynamic> json) => RoomPivot(
+        reservationId: json["reservation_id"],
+        roomId: json["room_id"],
+    );
+
+    Map<String, dynamic> toJson() => {
+        "reservation_id": reservationId,
+        "room_id": roomId,
+    };
+}
+
+enum Style { CLASSIC, ROYAL, LUXURY }
+
+final styleValues = EnumValues({
+    "classic": Style.CLASSIC,
+    "luxury": Style.LUXURY,
+    "royal": Style.ROYAL
 });
 
-enum StayType { pro, personal }
+enum Status { VALIDATED, NO_SHOW, TERMINATED, CANCELLED }
+
+final statusValues = EnumValues({
+    "cancelled": Status.CANCELLED,
+    "no-show": Status.NO_SHOW,
+    "terminated": Status.TERMINATED,
+    "validated": Status.VALIDATED
+});
+
+enum StayType { PRO, PERSONAL }
 
 final stayTypeValues = EnumValues({
-    "personal": StayType.personal,
-    "pro": StayType.pro
+    "personal": StayType.PERSONAL,
+    "pro": StayType.PRO
 });
 
 class EnumValues<T> {
@@ -105,12 +220,3 @@ class EnumValues<T> {
         return reverseMap;
     }
 }
-
-enum Gender { mme, mr}
-
-final genderValues = EnumValues({
-    "madam": Gender.mme,
-    "madame": Gender.mme,
-    "mister": Gender.mr,
-    "monsieur": Gender.mr
-});

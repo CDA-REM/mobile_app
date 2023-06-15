@@ -4,7 +4,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:qr_code_scanner/qr_code_scanner.dart';
 
-import '../screens/reception/checkin.dart';
+import 'reception/checkin.dart';
 
 
 class QrcodeScan extends StatefulWidget {
@@ -121,9 +121,6 @@ class _QrcodeScanState extends State<QrcodeScan> {
                                   builder: (context) =>
                                       Checkin(reservationId: '47'))),
 
-                          // () async {
-                          //   await controller?.resumeCamera();
-                          // },
                           child: const Text('resume',
                               style: TextStyle(fontSize: 20)),
                         ),

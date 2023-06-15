@@ -1,9 +1,8 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:hotel_arth_app/models/reservations.dart';
+import 'package:hotel_arth_app/url.dart';
 import 'package:http/http.dart' as http;
-
-import '../../models/reservations.dart';
-import '../../url.dart';
 
 class Checkin extends StatefulWidget {
   const Checkin({super.key, required this.reservationId});
@@ -16,15 +15,14 @@ class Checkin extends StatefulWidget {
 class _CheckinState extends State<Checkin> {
   late Future<Reservation> reservation;
 
-  Future<Reservation> getReservationsById() async {
+  Future<Reservation> getReservationById() async {
     var url = AppURL.url;
     var id = (widget.reservationId);
     var urlToCall = Uri.parse('${url}api/reservations/$id');
     var response = await http.get(urlToCall);
 
     if (response.statusCode == 200) {
-      var json = jsonDecode(response.body);
-      return Reservation.fromJson(json["data"]);
+      return Reservation.fromJson(jsonDecode(response.body));
     } else {
       throw Exception('Erreur au chargement de la réservation');
     }
@@ -32,7 +30,7 @@ class _CheckinState extends State<Checkin> {
 
   @override
   void initState() {
-    reservation = getReservationsById();
+    reservation = getReservationById();
     super.initState();
   }
 
@@ -72,16 +70,20 @@ class _CheckinState extends State<Checkin> {
                           Text('Madame Lucile Cost'),
                           Text(
                               'Nombre de personnes : ${snapshot.data!.numberOfPeople}'),
-                          Text('Date d\'arrivée : ${snapshot.data!.checkin}'),
-                          Text('Date de départ : ${snapshot.data!.checkout}'),
+                          Text(
+                              'Date d\'arrivée : ${snapshot.data!.startedDate}'),
+                          Text('Date de départ : ${snapshot.data!.endDate}'),
                           Text('Montant : ${snapshot.data!.price}'),
                         ],
                       ),
                     ),
                   ],
                 );
+              }
+              if (snapshot.hasError) {
+                return CircularProgressIndicator();
               } else {
-                return Text(widget.reservationId);
+                return Text("Snapshot.data = null");
               }
             }));
   }

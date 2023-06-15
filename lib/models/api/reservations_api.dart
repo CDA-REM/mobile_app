@@ -7,11 +7,10 @@ import '../reservations.dart';
 
 class ReservationsApi {
   var url = AppURL();
-   
-  Future<List<Reservation>> getReservations() async {
-    var response = await http
-    .get(Uri.parse('$url/api/reservations'));
 
-    return Reservations.fromJson(jsonDecode(response.body)).data;
+  Future<List<Reservation>> getReservations() async {
+    var response = await http.get(Uri.parse('$url/api/reservations'));
+
+    return List<Reservation>.from(jsonDecode(response.body));
   }
 }
