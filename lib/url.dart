@@ -1,3 +1,3 @@
 class AppURL {
-  static String url = 'http://192.168.56.1:8000/';
+  static String url = 'http://192.168.1.59:8000/';
 }
