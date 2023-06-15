@@ -79,11 +79,8 @@ class _CheckinState extends State<Checkin> {
                     ),
                   ],
                 );
-              }
-              if (snapshot.hasError) {
-                return CircularProgressIndicator();
               } else {
-                return Text("Snapshot.data = null");
+                return CircularProgressIndicator();
               }
             }));
   }
